@@ -1,6 +1,8 @@
-import "./style.css"
+// import "./style.css"
 import LogMessage from "./log";
+import LoadWrapper from "./dom";
 
+// LoadWrapper();
 let projects = [];
 let todos = [];
 
@@ -54,12 +56,19 @@ function CheckProjectExist(name) {
     return this.projects.some(p => p.name = name);
 }
 
+function DeleteProject(id) {
+    
+}
 function AddTodo(id, todo){
     if(!ValidateTodo(id,todo)){
         return;
     }
     todos.push(todo);
    
+}
+
+function DeleteTodo(input) {
+    
 }
 
 
