@@ -2,7 +2,7 @@
 import LogMessage from "./log";
 import LoadWrapper from "./dom";
 
-// LoadWrapper();
+LoadWrapper();
 let projects = [];
 let todos = [];
 
