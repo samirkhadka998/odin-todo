@@ -1,8 +1,15 @@
 // import "./style.css"
 import LogMessage from "./log";
-import LoadWrapper from "./dom";
+import LoadWrapper, {NavClick,LoadProjectForm, ProjectFormClick, LoadProject, ProjectDeleteClick} from "./dom";
 
 LoadWrapper();
+NavClick();
+LoadProjectForm();
+ProjectFormClick();
+
+
+
+
 let projects = [];
 let todos = [];
 
@@ -13,7 +20,6 @@ class Project {
         this.id = Project.IdGenerator
         this.name = name;
         this.color = color;
-        this.id = GenerateId();
     }
 }
 
@@ -40,24 +46,27 @@ function GetProjects(id){
     return projects;
 }
 
-function AddProject(name, color,){
+export function AddProject(name, color){
     if(CheckProjectExist(name)){
         LogMessage(`Project with ${name} already exist`)
         return;
     }
     let project = new Project(name, color);
-    this.projects.push(project);
+    projects.push(project);
+    LoadProject(projects);
     
 }
 
 
 
 function CheckProjectExist(name) {
-    return this.projects.some(p => p.name = name);
+    return projects.some(p => p.name == name);
 }
 
-function DeleteProject(id) {
-    
+export function DeleteProject(id) {
+    let index = projects.indexOf(projects.filter(p => p.id == id));
+    projects.splice(index,1);
+    LoadProject(projects);
 }
 function AddTodo(id, todo){
     if(!ValidateTodo(id,todo)){
