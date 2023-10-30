@@ -1,4 +1,5 @@
 import { AddProject, DeleteProject } from "./index";
+import { GetProjects, SetProjects } from "./localStorage";
 export default function LoadWrapper() {
     let wrapper = CreateElement('div', 'wrapper');
     let nav = LoadNav();
@@ -163,9 +164,10 @@ function AddClickEventListener(items, method) {
     }
 }
 
-export function LoadProject(input) {
+export function LoadProject() {
     let content = GetElement('.content');
     content.textContent = '';
+    let input = GetProjects();
     input.forEach(i => {
         let div = CreateElement('div');
         let span1 = CreateElement('span', 'color');
@@ -184,7 +186,6 @@ export function LoadProject(input) {
         AppendChild(div, [span1, span2, btn, btn1])
         AppendChild(content, div);
         ProjectDeleteClick();
-
     })
 }
 
