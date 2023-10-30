@@ -9,3 +9,14 @@ export function SetProjects(projects){
     localStorage.setItem("projects", JSON.stringify(projects));
     LoadProject();
 }
+
+
+export function GetTasks() {
+    return JSON.parse(localStorage.getItem("tasks") || "[]");
+}
+
+export function SetTasks(tasks){
+    if(tasks.Length == 0) return;
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    // LoadProject();
+}

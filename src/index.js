@@ -32,10 +32,11 @@ class Project {
 
 class Todo{
     static IdGenerator = 0;
-    constructor(title, dueDate, description, priority, notes, checklist, projectId){
+    constructor(title, color, dueDate, description, priority, notes, checklist, projectId){
         Todo.IdGenerator +=  1;
         this.id = Todo.IdGenerator;
         this.title = title;
+        this.color = color;
         this.dueDate = dueDate;
         this.description = description;
         this.priority = priority;
@@ -80,7 +81,7 @@ function ReloadProjects() {
     SetProjects(projects);
     projects = GetProjects();
 }
-function AddTodo(id, todo){
+export function AddTodo(id, todo){
     if(!ValidateTodo(id,todo)){
         return;
     }
@@ -112,7 +113,7 @@ function ValidateTodo(id,todo){
 
 function CheckTodoExist(id, title){
     let project = GetProjects(id);
-    return project.todos.some(todo => todo.title == title)
+    return todos.some(todo => todo.title == title && todo.id == id)
 
 }
 

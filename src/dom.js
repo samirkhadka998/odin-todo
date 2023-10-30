@@ -1,4 +1,4 @@
-import { AddProject, DeleteProject } from "./index";
+import { AddProject, DeleteProject, AddTodo } from "./index";
 import { GetProjects, SetProjects } from "./localStorage";
 export default function LoadWrapper() {
     let wrapper = CreateElement('div', 'wrapper');
@@ -117,10 +117,6 @@ function CreateProject() {
 
 }
 
-function LoadProjects(id, name, color) {
-
-}
-
 function CreateElement(element, className = null) {
     let ele = document.createElement(element);
     if (className) {
@@ -129,9 +125,7 @@ function CreateElement(element, className = null) {
     return ele;
 }
 
-function assignClass(element, className) {
-    element.className = className;
-}
+
 
 function AppendChild(parent, items) {
     if (Array.isArray(items)) {
@@ -186,19 +180,146 @@ export function LoadProject() {
         AppendChild(div, [span1, span2, btn, btn1])
         AppendChild(content, div);
         ProjectDeleteClick();
+        ProjectViewClick();
     })
 }
 
 export function ProjectDeleteClick(){
     let deleteBtns = GetElement('.delete',true);
-    AddClickEventListener(deleteBtns, FindProjectIndex);
+    AddClickEventListener(deleteBtns, DeleteProjectById);
 }
 
-function FindProjectIndex(e){
+
+function DeleteProjectById(e){
     let id = e.target.dataset.id;
     DeleteProject(id);
 
 }
+
+
+export function ProjectViewClick(){
+    let viewBtns = GetElement('.view', true);
+    AddClickEventListener(viewBtns, ViewProjectById)
+    
+}
+
+function ViewProjectById(e) {
+    let id = e.target.dataset.id;
+    let main = GetElement('main');
+    main.textContent = '';
+    let btn = CreateElement('button','addTask');
+    btn.dataset.id = id;
+    btn.textContent = 'Create Task';
+    AppendChild(main, btn);
+    CreateTaskClick();
+
+}
+
+function CreateTaskClick() {
+    let btns = GetElement('.addTask', true);
+    AddClickEventListener(btns, LoadTaskForm)
+    
+
+}
+
+export function LoadTaskForm(e) {
+    let projectId = e.target.dataset.id;
+    let main = GetElement('main');
+    let form = CreateElement('form', 'task');
+
+    let div1 = CreateElement('div');
+    let label1 = CreateElement('label');
+    label1.textContent = 'Name';
+    let input1 = CreateElement('input');
+    input1.setAttribute('name', 'title');
+    AppendChild(div1, [label1, input1])
+
+    let div2 = CreateElement('div');
+    let label2 = CreateElement('label');
+    label2.textContent = 'Color';
+    let input2 = CreateElement('input');
+    input2.setAttribute('name', 'color');
+    input2.setAttribute('type', 'color')
+    AppendChild(div2, [label2, input2]);
+
+    let div3 = CreateElement('div');
+    let label3 = CreateElement('label');
+    label3.textContent = 'Due Date';
+    let input3 = CreateElement('input');
+    input3.setAttribute('name', 'dueDate');
+    AppendChild(div3, [label3, input3]);
+
+    let div4 = CreateElement('div');
+    let label4 = CreateElement('label');
+    label4.textContent = 'Description';
+    let input4 = CreateElement('input');
+    input4.setAttribute('name', 'description');
+    AppendChild(div4, [label4, input4]);
+
+
+    let div5 = CreateElement('div');
+    let label5 = CreateElement('label');
+    label5.textContent = 'Priority';
+    let input5 = CreateElement('input');
+    input5.setAttribute('name', 'priority');
+    AppendChild(div5, [label5, input5]);
+
+    let div6 = CreateElement('div');
+    let label6 = CreateElement('label');
+    label6.textContent = 'Notes';
+    let input6 = CreateElement('input');
+    input6.setAttribute('name', 'notes');
+    AppendChild(div6, [label6, input6]);
+
+    let div7 = CreateElement('div');
+    let label7 = CreateElement('label');
+    label7.textContent = 'Check List';
+    let input7 = CreateElement('input');
+    input7.setAttribute('name', 'checklist');
+    AppendChild(div7, [label7, input7]);
+
+    let input8 = CreateElement('input');
+    input8.value = projectId;
+    input8.setAttribute('name','projectId');
+    input8.setAttribute('hidden', true);
+
+
+
+
+    let button = CreateElement('button', 'taskBtn');
+    button.setAttribute('type', 'button')
+    button.textContent = 'Submit';
+
+    AppendChild(form, [div1, div2, div3, div4, div5, div6, div7, input8, button]);
+
+    AppendChild(main, form);
+
+    TaskFormClick();
+
+
+}
+
+function TaskFormClick(){
+    let btns = GetElement('.taskBtn', true);
+    AddClickEventListener(btns, CreateTask);
+}
+
+function CreateTask(){
+    let form = GetElement('.task');
+    AddTodo(form.projectId.value, {
+        title : form.title.value,
+        color : form.color.value,
+        dueDate : form.dueDate.value,
+        description : form.description.value,
+        priority : form.priority.value,
+        notes : form.notes.value,
+        checklist : form.checklist.value,
+        projectId : form.projectId.value
+    })
+
+}
+
+
 
 
 
