@@ -11,12 +11,12 @@ export function SetProjects(projects){
 }
 
 
-export function GetTasks() {
-    return JSON.parse(localStorage.getItem("tasks") || "[]");
+export function GetTodos() {
+    return JSON.parse(localStorage.getItem("todos") || "[]");
 }
 
-export function SetTasks(tasks){
-    if(tasks.Length == 0) return;
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+export function SetTodos(todos){
+    if(todos.Length == 0) return;
+    localStorage.setItem("todos", JSON.stringify(todos));
     // LoadProject();
 }

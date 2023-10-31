@@ -38,6 +38,7 @@ function LoadNav() {
     li3.textContent = 'Add Project';
     AppendChild(ul, [li1, li2, li3]);
     AppendChild(nav, ul);
+    AddClickEventListener([li1, li2, li3], NavAction);
     return nav;
 }
 
@@ -60,21 +61,22 @@ function LoadMain() {
     return main;
 }
 
-export function NavClick() {
-    let list = GetElement('nav li', true);
-    AddClickEventListener(list, NavAction);
-}
-
 
 function NavAction(e) {
     if (e.target.className == 'projectAdd') {
-        LoadProjectForm();
+        LoadProjectDialog();
     }
 }
 
-export function LoadProjectForm() {
-    let main = GetElement('main');
-    main.textContent = '';
+export function LoadProjectDialog() {
+    let wrapper = GetElement('.wrapper');
+    let olddialog = GetElement('.projectDialog');
+    if(olddialog){
+        wrapper.removeChild(olddialog);
+    }
+    let dialog = CreateElement('dialog', 'projectDialog');
+    let closeBtn = CreateElement('button','closeProject')
+    closeBtn.textContent = 'x';
     let form = CreateElement('form', 'project');
 
     let div1 = CreateElement('div');
@@ -95,12 +97,23 @@ export function LoadProjectForm() {
     let button = CreateElement('button', 'projectBtn');
     button.setAttribute('type', 'button')
     button.textContent = 'Submit';
+    AddClickEventListener(button, CreateProject);
 
     AppendChild(form, [div1, div2, button]);
 
-    AppendChild(main, form);
+    AppendChild(dialog, [closeBtn, form]);
+
+    AppendChild(wrapper, dialog)
+
+    dialog.showModal();
+    AddClickEventListener(closeBtn, CloseProjectDialog)
 
 
+}
+
+function CloseProjectDialog(){
+    let dialog = GetElement('.projectDialog');
+    dialog.close();
 }
 
 export function ProjectFormClick() {
@@ -204,27 +217,29 @@ export function ProjectViewClick(){
 }
 
 function ViewProjectById(e) {
-    let id = e.target.dataset.id;
     let main = GetElement('main');
-    main.textContent = '';
+    let id = e.target.dataset.id;
     let btn = CreateElement('button','addTask');
     btn.dataset.id = id;
     btn.textContent = 'Create Task';
     AppendChild(main, btn);
-    CreateTaskClick();
+    AddClickEventListener(btn, LoadTodoForm)
+
 
 }
 
-function CreateTaskClick() {
-    let btns = GetElement('.addTask', true);
-    AddClickEventListener(btns, LoadTaskForm)
-    
 
-}
 
-export function LoadTaskForm(e) {
+export function LoadTodoForm(e) {
+    let wrapper = GetElement('.wrapper');
+    let olddialog = GetElement('.todoDialog');
+    if(olddialog){
+        wrapper.removeChild(olddialog);
+    }
+    let dialog = CreateElement('dialog', 'todoDialog')
+    let closeBtn = CreateElement('button','todoDialogClose');
+    closeBtn.textContent = 'x';
     let projectId = e.target.dataset.id;
-    let main = GetElement('main');
     let form = CreateElement('form', 'task');
 
     let div1 = CreateElement('div');
@@ -289,20 +304,27 @@ export function LoadTaskForm(e) {
     let button = CreateElement('button', 'taskBtn');
     button.setAttribute('type', 'button')
     button.textContent = 'Submit';
-
+    
+    
     AppendChild(form, [div1, div2, div3, div4, div5, div6, div7, input8, button]);
+    
+    AppendChild(dialog, [closeBtn, form]);
 
-    AppendChild(main, form);
+    AppendChild(wrapper , dialog)
 
-    TaskFormClick();
+    dialog.showModal();
+    
+    AddClickEventListener(button, CreateTask);
+    AddClickEventListener(closeBtn, CloseTodoDialog)
 
 
 }
 
-function TaskFormClick(){
-    let btns = GetElement('.taskBtn', true);
-    AddClickEventListener(btns, CreateTask);
+function CloseTodoDialog(){
+    let dialog = GetElement('.todoDialog');
+    dialog.close();
 }
+
 
 function CreateTask(){
     let form = GetElement('.task');
@@ -317,6 +339,10 @@ function CreateTask(){
         projectId : form.projectId.value
     })
 
+}
+
+function ProjectDialogAction(){
+    let Dialog = GetElement()
 }
 
 

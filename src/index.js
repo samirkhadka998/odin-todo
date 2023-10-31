@@ -1,19 +1,16 @@
 // import "./style.css"
 import LogMessage from "./log";
 import LoadWrapper, {NavClick,LoadProjectForm, ProjectFormClick, LoadProject, ProjectDeleteClick} from "./dom";
-import { GetProjects, SetProjects } from "./localStorage";
+import { GetProjects, SetProjects, GetTodos, SetTodos } from "./localStorage";
 
 
 
 LoadWrapper();
-NavClick();
-LoadProjectForm();
-ProjectFormClick();
 
 
 let projects = GetProjects();
 LoadProject();
-let todos = [];
+let todos = GetTodos();
 
 
 
@@ -117,7 +114,7 @@ function CheckTodoExist(id, title){
 
 }
 
-function GetTodos(id) {
-    return todo.filter(t => t.projectId == id);
-}
+// function GetTodos(id) {
+//     return todo.filter(t => t.projectId == id);
+// }
 
