@@ -1,7 +1,7 @@
 // import "./style.css"
 import LogMessage from "./log";
-import LoadWrapper, {NavClick,LoadProjectForm, ProjectFormClick, LoadProject, ProjectDeleteClick} from "./dom";
-import { GetProjects, SetProjects, GetTodos, SetTodos } from "./localStorage";
+import LoadWrapper, {NavClick,LoadProjectForm, ProjectFormClick, LoadProject} from "./dom";
+import { GetProjects, SetProjects, GetTodos, SetTodos, GetProjectCounter, GetTodoCounter } from "./localStorage";
 
 
 
@@ -9,7 +9,8 @@ LoadWrapper();
 
 
 let projects = GetProjects();
-LoadProject();
+LoadProject(projects);
+
 let todos = GetTodos();
 
 
@@ -17,10 +18,8 @@ let todos = GetTodos();
 
 
 class Project {
-    static IdGenerator = 0;
     constructor(name, color){
-        Project.IdGenerator +=  1;
-        this.id = Project.IdGenerator
+        this.id = GetProjectCounter()
         this.name = name;
         this.color = color;
     }
@@ -28,10 +27,8 @@ class Project {
 
 
 class Todo{
-    static IdGenerator = 0;
     constructor(title, color, dueDate, description, priority, notes, checklist, projectId){
-        Todo.IdGenerator +=  1;
-        this.id = Todo.IdGenerator;
+        this.id = GetTodoCounter();
         this.title = title;
         this.color = color;
         this.dueDate = dueDate;
@@ -42,13 +39,6 @@ class Todo{
         this.projectId = projectId;
     }
 }
-
-// function GetProjects(id){
-//     if(id){
-//         return this.projects.filter(p => p.id == id)[0];
-//     }
-//     return projects;
-// }
 
 export function AddProject(name, color){
     if(CheckProjectExist(name)){
@@ -78,6 +68,8 @@ function ReloadProjects() {
     SetProjects(projects);
     projects = GetProjects();
 }
+
+
 export function AddTodo(id, todo){
     if(!ValidateTodo(id,todo)){
         return;
@@ -86,8 +78,15 @@ export function AddTodo(id, todo){
    
 }
 
+function ReloadTodos() {
+    SetProjects(todos);
+    todos = GetTodos();
+}
+
 function DeleteTodo(input) {
-    
+    let index = todos.indexOf(todos.filter(t => t.id == id));
+    todos.splice(index,1);
+    ReloadProjects();
 }
 
 
@@ -113,8 +112,4 @@ function CheckTodoExist(id, title){
     return todos.some(todo => todo.title == title && todo.id == id)
 
 }
-
-// function GetTodos(id) {
-//     return todo.filter(t => t.projectId == id);
-// }
 
