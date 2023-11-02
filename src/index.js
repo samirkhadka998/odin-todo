@@ -27,19 +27,22 @@ if(projects.length > 0){
 
 class Project {
     constructor(name, color){
+        let datetime = new Date();
         this.id = GetProjectCounter()
         this.name = name;
         this.color = color;
+        this.datetime = datetime.toISOString();
     }
 }
 
 
-class Todo{
-    constructor(title, color, dueDate, description, priority, notes, checklist, projectId){
+export class Todo{
+    constructor(title, color, description, priority, notes, checklist, projectId){
+        let datetime = new Date();
         this.id = GetTodoCounter();
         this.title = title;
         this.color = color;
-        this.dueDate = dueDate;
+        this.dueDate = datetime.toISOString();
         this.description = description;
         this.priority = priority;
         this.notes = notes;
@@ -53,7 +56,8 @@ export function AddProject(name, color){
         LogMessage(`Project with ${name} already exist`)
         return;
     }
-    let project = new Project(name, color);
+    let datetime = new Date();
+    let project = new Project(name, color, datetime.toISOString());
     projects.push(project);
     ReloadProjects();
     

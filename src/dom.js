@@ -1,4 +1,4 @@
-import { AddProject, DeleteProject, AddTodo, DeleteTodo } from "./index";
+import { AddProject, DeleteProject, AddTodo, DeleteTodo, Todo } from "./index";
 import { GetProjects, GetTodoCounter, GetTodos, SetTodos } from "./localStorage";
 export default function LoadWrapper() {
     let wrapper = CreateElement('div', 'wrapper');
@@ -61,6 +61,12 @@ function LoadMain() {
 function NavAction(e) {
     if (e.target.className == 'projectAdd') {
         LoadProjectDialog();
+    }
+    else if(e.target.textContent == 'Home'){
+        LoadHome();
+    }
+    else{
+        LoadAbout();
     }
 }
 
@@ -249,12 +255,12 @@ export function LoadTodoForm(e) {
     input2.setAttribute('type', 'color')
     AppendChild(div2, [label2, input2]);
 
-    let div3 = CreateElement('div');
-    let label3 = CreateElement('label');
-    label3.textContent = 'Due Date';
-    let input3 = CreateElement('input');
-    input3.setAttribute('name', 'dueDate');
-    AppendChild(div3, [label3, input3]);
+    // let div3 = CreateElement('div');
+    // let label3 = CreateElement('label');
+    // label3.textContent = 'Due Date';
+    // let input3 = CreateElement('input');
+    // input3.setAttribute('name', 'dueDate');
+    // AppendChild(div3, [label3, input3]);
 
     let div4 = CreateElement('div');
     let label4 = CreateElement('label');
@@ -298,7 +304,7 @@ export function LoadTodoForm(e) {
     button.textContent = 'Submit';
     
     
-    AppendChild(form, [div1, div2, div3, div4, div5, div6, div7, input8, button]);
+    AppendChild(form, [div1, div2,  div4, div5, div6, div7, input8, button]);
     
     AppendChild(dialog, [closeBtn, form]);
 
@@ -320,17 +326,10 @@ function CloseTodoDialog(){
 
 function CreateTodo(){
     let form = GetElement('.todo');
-    AddTodo(form.projectId.value, {
-        title : form.title.value,
-        color : form.color.value,
-        dueDate : form.dueDate.value,
-        description : form.description.value,
-        priority : form.priority.value,
-        notes : form.notes.value,
-        checklist : form.checklist.value,
-        projectId : form.projectId.value,
-        id : GetTodoCounter()
-    })
+    let datetime = new Date();
+    let todo = new Todo(form.title.value, form.color.value, form.description.value, form.priority.value, form.notes.value, form.checklist.value,
+    form.projectId.value);
+    AddTodo(form.projectId.value, todo)
     CloseTodoDialog();
 
 }
@@ -376,4 +375,16 @@ function HightlightElement(ele){
     ele.parentElement.classList.add('highlight');
 
 }
+
+
+export function LoadHome(){
+    // let main = GetElement('main');
+    // main.textContent = 'Home';
+}
+
+export function LoadAbout(){
+    // let main = GetElement('main');
+    // main.textContent = 'About';
+}
+
 
