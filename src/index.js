@@ -66,9 +66,19 @@ function CheckProjectExist(name) {
 }
 
 export function DeleteProject(id) {
-    let index = projects.indexOf(projects.filter(p => p.id == id));
-    projects.splice(index,1);
-    ReloadProjects();
+    let projectCopy = [...projects]
+    let todoCopy = [...todos];
+    let project = projectCopy.find(p => p.id == id);
+    todoCopy =  todoCopy.filter(t => t.projectId == id);
+
+    let confirmation = confirm(`Are you sure you want to delete ${project.name} ?. It has ${todoCopy.length} children`);
+
+    if(confirmation){
+        todos = todos.filter(t => t.projectId != id);
+        projects = projects.filter(p => p.id != id);
+        ReloadTodos();
+        ReloadProjects();
+    }
     
 }
 

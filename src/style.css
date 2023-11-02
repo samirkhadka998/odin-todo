@@ -98,3 +98,7 @@ dialog {
     position: absolute;
     background: #eee;
 }
+
+.highlight{
+    background-color: yellow;
+}

@@ -216,6 +216,7 @@ function ViewProjectById(e) {
     let todosCopy = [...GetTodos()];
     todosCopy = todosCopy.filter(t => t.projectId == id);
     LoadTodo(todosCopy)
+    HightlightElement(e.target)
 }
 
 
@@ -230,6 +231,7 @@ export function LoadTodoForm(e) {
     let closeBtn = CreateElement('button','todoDialogClose');
     closeBtn.textContent = 'x';
     let projectId = e.target.dataset.id;
+    HightlightElement(e.target);
     let form = CreateElement('form', 'todo');
 
     let div1 = CreateElement('div');
@@ -362,6 +364,16 @@ export function LoadTodo(todos) {
 function DeleteTodoById(e){
     let id = e.target.dataset.id;
     DeleteTodo(id);
+
+}
+
+function HightlightElement(ele){
+    let parentElement = ele.parentElement.parentElement;
+    let children = parentElement.childNodes;
+    Array.from(children).forEach(div => {
+        div.classList.remove('highlight');
+    })
+    ele.parentElement.classList.add('highlight');
 
 }
 
