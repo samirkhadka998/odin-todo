@@ -51,14 +51,14 @@ span.color {
     border-radius: 50%;
 }
 
-aside>div, .content>div {
+/* aside>div, .content>div {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     gap: 8px;
-}
+} */
 
-aside {
+aside ,.content{
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -70,7 +70,7 @@ aside {
     gap: 200px;
 }
 
-.content {
+.todoItems {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 15px;

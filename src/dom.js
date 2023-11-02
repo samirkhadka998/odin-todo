@@ -1,5 +1,5 @@
 import { AddProject, DeleteProject, AddTodo, DeleteTodo } from "./index";
-import { GetProjects, GetTodos } from "./localStorage";
+import { GetProjects, GetTodoCounter, GetTodos, SetTodos } from "./localStorage";
 export default function LoadWrapper() {
     let wrapper = CreateElement('div', 'wrapper');
     let nav = LoadNav();
@@ -17,13 +17,9 @@ function LoadAside() {
     let div2 = CreateElement('div', 'content');
     let h2 = CreateElement('h2');
     h2.textContent = 'Projects';
-    let span = CreateElement('span');
-    span.textContent = "+";
-    AppendChild(div, [h2, span]);
+    AppendChild(div, h2);
     AppendChild(aside, div);
     AppendChild(aside, div2)
-
-
     return aside;
 }
 
@@ -52,11 +48,12 @@ function LoadFooter() {
 function LoadMain() {
     let main = CreateElement('main');
     let div = CreateElement('div', 'heading');
-    let div2 = CreateElement('div', 'todoItems');
     let h2 = CreateElement('h2');
+    let div2 = CreateElement('div','createTodo')
+    let div3 = CreateElement('div', 'todoItems');
     h2.textContent = 'Todos';
-    AppendChild(div, h2);
-    AppendChild(main, [div,div2]);
+    AppendChild(div , [h2,div2,div3]);
+    AppendChild(main, div);
     return main;
 }
 
@@ -120,9 +117,9 @@ function CloseProjectDialog(){
 
 
 function CreateProject() {
-    console.log('form is called')
     let form = GetElement('.project');
     AddProject(form.name.value, form.color.value)
+    CloseProjectDialog();
 
 }
 
@@ -156,7 +153,6 @@ function GetElement(element, multiple = false) {
 }
 
 function AddClickEventListener(items, method) {
-    console.log(items.length)
     if (Number(items.length) > 0) {
         Array.from(items).forEach(item => {
             item.addEventListener('click', method);
@@ -170,9 +166,11 @@ function AddClickEventListener(items, method) {
 export function LoadProject(projects) {
     let content = GetElement('.content');
     content.textContent = '';
-    projects = GetProjects();
+    // projects = GetProjects();
     projects.forEach(i => {
         let div = CreateElement('div');
+        let span = CreateElement('span');
+        span.textContent = i.id;
         let span1 = CreateElement('span', 'color');
         span1.style.background = i.color;
         span1.style.color = i.color;
@@ -186,10 +184,16 @@ export function LoadProject(projects) {
         let btn1 = CreateElement('button', 'delete');
         btn1.textContent = 'Delete';
         btn1.dataset.id = i.id;
-        AppendChild(div, [span1, span2, btn, btn1])
+
+        let btn2 = CreateElement('button', 'createTodo');
+        btn2.textContent = 'Add Todo';
+        btn2.dataset.id = i.id;
+
+        AppendChild(div, [span1, span2, btn, btn1, btn2])
         AppendChild(content, div);
         AddClickEventListener(btn1, DeleteProjectById);
         AddClickEventListener(btn,ViewProjectById)
+        AddClickEventListener(btn2,LoadTodoForm)
     })
 
         
@@ -208,19 +212,10 @@ function DeleteProjectById(e){
 
 
 function ViewProjectById(e) {
-    let main = GetElement('main');
     let id = e.target.dataset.id;
-    let oldBtn = GetElement('.addTodo');
-    if(oldBtn){
-        main.removeChild(oldBtn);
-    }
-    let btn = CreateElement('button','addTodo');
-    btn.dataset.id = id;
-    btn.textContent = 'Create Todo';
-    AppendChild(main, btn);
-    AddClickEventListener(btn, LoadTodoForm)
-
-
+    let todosCopy = [...GetTodos()];
+    todosCopy = todosCopy.filter(t => t.projectId == id);
+    LoadTodo(todosCopy)
 }
 
 
@@ -331,17 +326,21 @@ function CreateTodo(){
         priority : form.priority.value,
         notes : form.notes.value,
         checklist : form.checklist.value,
-        projectId : form.projectId.value
+        projectId : form.projectId.value,
+        id : GetTodoCounter()
     })
+    CloseTodoDialog();
 
 }
 
 export function LoadTodo(todos) {
     let todoItems = GetElement('.todoItems');
     todoItems.textContent = '';
-    todos = GetTodos();
+    // todos = GetTodos();
     todos.forEach(i => {
         let div = CreateElement('div');
+        let spanID = CreateElement('span');
+        spanID.textContent = i.projectId;
         let span1 = CreateElement('span', 'color');
         span1.style.background = i.color;
         span1.style.color = i.color;
@@ -351,9 +350,9 @@ export function LoadTodo(todos) {
         let btn1 = CreateElement('button', 'deletetodo');
         btn1.textContent = 'Delete';
         btn1.dataset.id = i.id;
-        AppendChild(div, [span1, span2, btn, btn1])
+        AppendChild(div, [spanID, span1, span2, btn1])
         AppendChild(todoItems, div);
-        AddClickEventListener('.deletetodo', DeleteTodoById)
+        AddClickEventListener(btn1, DeleteTodoById)
 
 
     })

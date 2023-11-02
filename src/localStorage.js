@@ -1,4 +1,4 @@
-import { LoadProject } from "./dom";
+import { LoadProject, LoadTodo} from "./dom";
 
 export function GetProjects() {
     return JSON.parse(localStorage.getItem("projects") || "[]");

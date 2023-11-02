@@ -1,6 +1,6 @@
 // import "./style.css"
 import LogMessage from "./log";
-import LoadWrapper, {NavClick,LoadProjectForm, ProjectFormClick, LoadProject} from "./dom";
+import LoadWrapper, {NavClick,LoadProjectForm, ProjectFormClick, LoadProject, LoadTodo} from "./dom";
 import { GetProjects, SetProjects, GetTodos, SetTodos, GetProjectCounter, GetTodoCounter } from "./localStorage";
 
 
@@ -9,9 +9,17 @@ LoadWrapper();
 
 
 let projects = GetProjects();
-LoadProject(projects);
-
 let todos = GetTodos();
+
+if(projects.length > 0){
+    LoadProject(projects);
+    let firstProject = projects.sort((a,b) => a.id > b.id ? 1 : -1)[0];
+    let todosCopy = [...todos];
+    todosCopy = todosCopy.filter(t => t.projectId == firstProject.id);
+    LoadTodo(todosCopy)
+}
+
+
 
 
 
@@ -70,23 +78,33 @@ function ReloadProjects() {
 }
 
 
-export function AddTodo(id, todo){
-    if(!ValidateTodo(id,todo)){
-        return;
-    }
+export function AddTodo(projectid, todo){
+    // if(!ValidateTodo(projectid,todo)){
+    //     return;
+    // }
     todos.push(todo);
+    ReloadTodos(projectid);
    
 }
 
-function ReloadTodos() {
-    SetProjects(todos);
-    todos = GetTodos();
+function ReloadTodos(projectId) {
+    SetTodos(todos);
+    let todosCopy = [...GetTodos()];
+    todosCopy = todosCopy.filter(t => t.projectId == projectId);
+    LoadTodo(todosCopy);
 }
 
-function DeleteTodo(input) {
-    let index = todos.indexOf(todos.filter(t => t.id == id));
-    todos.splice(index,1);
-    ReloadProjects();
+export function DeleteTodo(id) {
+    
+    //to find projectId
+    let todoCopy = [...todos];
+    //we use find becuase it returns object , unlike filter which return arrary regarless of result count
+    let todo = todoCopy.find(t => t.id == id);
+   
+
+    //changing orginal array
+    todos = todos.filter(t => t.id != id);
+    ReloadTodos(todo.projectId);
 }
 
 
@@ -109,7 +127,7 @@ function ValidateTodo(id,todo){
 
 function CheckTodoExist(id, title){
     let project = GetProjects(id);
-    return todos.some(todo => todo.title == title && todo.id == id)
+    return todos.some(todo => todo.title == title && todo.projectId == id)
 
 }
 
