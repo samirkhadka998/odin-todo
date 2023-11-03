@@ -255,12 +255,19 @@ export function LoadTodoForm(e) {
     input2.setAttribute('type', 'color')
     AppendChild(div2, [label2, input2]);
 
-    // let div3 = CreateElement('div');
-    // let label3 = CreateElement('label');
-    // label3.textContent = 'Due Date';
-    // let input3 = CreateElement('input');
-    // input3.setAttribute('name', 'dueDate');
-    // AppendChild(div3, [label3, input3]);
+    let div3 = CreateElement('div');
+    let label3 = CreateElement('label');
+    label3.textContent = 'Due Date';
+    let input3 = CreateElement('input');
+    input3.setAttribute('name', 'dueDate');
+    input3.setAttribute('type', 'datetime-local');
+    let datetime = new Date();
+    var now = new Date();
+now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    let addExtraMinute = new Date(Date.now() + (5 * 60 * 1000)).toISOString();
+    input3.setAttribute('value',now)
+    input3.setAttribute('min', datetime.toISOString());
+    AppendChild(div3, [label3, input3]);
 
     let div4 = CreateElement('div');
     let label4 = CreateElement('label');
@@ -304,7 +311,7 @@ export function LoadTodoForm(e) {
     button.textContent = 'Submit';
     
     
-    AppendChild(form, [div1, div2,  div4, div5, div6, div7, input8, button]);
+    AppendChild(form, [div1, div2, div3,  div4, div5, div6, div7, input8, button]);
     
     AppendChild(dialog, [closeBtn, form]);
 
@@ -328,7 +335,7 @@ function CreateTodo(){
     let form = GetElement('.todo');
     let datetime = new Date();
     let todo = new Todo(form.title.value, form.color.value, form.description.value, form.priority.value, form.notes.value, form.checklist.value,
-    form.projectId.value);
+    form.projectId.value, form.dueDate.value);
     AddTodo(form.projectId.value, todo)
     CloseTodoDialog();
 

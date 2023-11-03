@@ -37,7 +37,7 @@ class Project {
 
 
 export class Todo{
-    constructor(title, color, description, priority, notes, checklist, projectId){
+    constructor(title, color, description, priority, notes, checklist, projectId, dueDate){
         let datetime = new Date();
         this.id = GetTodoCounter();
         this.title = title;
@@ -48,6 +48,7 @@ export class Todo{
         this.notes = notes;
         this.checklist = checklist;
         this.projectId = projectId;
+        this.dueDate = dueDate;
     }
 }
 
