@@ -37,9 +37,14 @@ class Project {
 
 
 export class Todo{
-    constructor(title, color, description, priority, notes, checklist, projectId, dueDate){
+    constructor(title, color, description, priority, notes, checklist, projectId, dueDate, id = undefined){
         let datetime = new Date();
-        this.id = GetTodoCounter();
+        if(id){
+            this.id = id;
+        }
+        else{
+            this.id = GetTodoCounter();
+        }
         this.title = title;
         this.color = color;
         this.dueDate = datetime.toISOString();
@@ -102,6 +107,16 @@ export function AddTodo(projectid, todo){
    
 }
 
+export function UpdateTodo(id, todo) {
+    let index = todos.findIndex(t => t.id == id)
+    if(index != -1){
+        todos[index] = todo;
+        ReloadTodos(todo.projectId);
+    }
+
+    
+}
+
 function ReloadTodos(projectId) {
     SetTodos(todos);
     let todosCopy = [...GetTodos()];
@@ -144,5 +159,15 @@ function CheckTodoExist(id, title){
     let project = GetProjects(id);
     return todos.some(todo => todo.title == title && todo.projectId == id)
 
+}
+
+export function GetDateDetails(date){
+    return  {
+        dd : String(date.getDate()).padStart(2, '0'),
+        mm : String(date.getMonth() + 1).padStart(2, '0'),
+        yyyy:  date.getFullYear(),
+        hh:String(date.getHours() + 1).padStart(2, '0'),
+        mi:String(date.getMinutes() + 1).padStart(2, '0'),
+    }
 }
 

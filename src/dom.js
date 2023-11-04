@@ -1,5 +1,7 @@
-import { AddProject, DeleteProject, AddTodo, DeleteTodo, Todo } from "./index";
+import { AddProject, DeleteProject, AddTodo, DeleteTodo, Todo, GetDateDetails, UpdateTodo } from "./index";
 import { GetProjects, GetTodoCounter, GetTodos, SetTodos } from "./localStorage";
+import { formatDistance, subDays } from 'date-fns'
+
 export default function LoadWrapper() {
     let wrapper = CreateElement('div', 'wrapper');
     let nav = LoadNav();
@@ -49,10 +51,10 @@ function LoadMain() {
     let main = CreateElement('main');
     let div = CreateElement('div', 'heading');
     let h2 = CreateElement('h2');
-    let div2 = CreateElement('div','createTodo')
+    let div2 = CreateElement('div', 'createTodo')
     let div3 = CreateElement('div', 'todoItems');
     h2.textContent = 'Todos';
-    AppendChild(div , [h2,div2,div3]);
+    AppendChild(div, [h2, div2, div3]);
     AppendChild(main, div);
     return main;
 }
@@ -62,10 +64,10 @@ function NavAction(e) {
     if (e.target.className == 'projectAdd') {
         LoadProjectDialog();
     }
-    else if(e.target.textContent == 'Home'){
+    else if (e.target.textContent == 'Home') {
         LoadHome();
     }
-    else{
+    else {
         LoadAbout();
     }
 }
@@ -73,11 +75,11 @@ function NavAction(e) {
 export function LoadProjectDialog() {
     let wrapper = GetElement('.wrapper');
     let olddialog = GetElement('.projectDialog');
-    if(olddialog){
+    if (olddialog) {
         wrapper.removeChild(olddialog);
     }
     let dialog = CreateElement('dialog', 'projectDialog');
-    let closeBtn = CreateElement('button','closeProject')
+    let closeBtn = CreateElement('button', 'closeProject')
     closeBtn.textContent = 'x';
     let form = CreateElement('form', 'project');
 
@@ -113,7 +115,7 @@ export function LoadProjectDialog() {
 
 }
 
-function CloseProjectDialog(){
+function CloseProjectDialog() {
     let dialog = GetElement('.projectDialog');
     dialog.close();
 }
@@ -195,20 +197,27 @@ export function LoadProject(projects) {
         btn2.textContent = 'Add Todo';
         btn2.dataset.id = i.id;
 
-        AppendChild(div, [span1, span2, btn, btn1, btn2])
+        let span3 = CreateElement('span', 'duedate');
+        if (i.datetime) {
+
+            span3.textContent = '';
+
+        }
+
+        AppendChild(div, [span1, span2, btn, btn1, btn2, span3])
         AppendChild(content, div);
         AddClickEventListener(btn1, DeleteProjectById);
-        AddClickEventListener(btn,ViewProjectById)
-        AddClickEventListener(btn2,LoadTodoForm)
+        AddClickEventListener(btn, ViewProjectById)
+        AddClickEventListener(btn2, LoadTodoForm)
     })
 
-        
-    
+
+
 }
 
 
 
-function DeleteProjectById(e){
+function DeleteProjectById(e) {
     let id = e.target.dataset.id;
     DeleteProject(id);
 
@@ -227,15 +236,21 @@ function ViewProjectById(e) {
 
 
 
-export function LoadTodoForm(e) {
+export function LoadTodoForm(e, todo) {
+    let update = false;
+    if (todo != undefined) {
+        update = true;
+    }
     let wrapper = GetElement('.wrapper');
     let olddialog = GetElement('.todoDialog');
-    if(olddialog){
+    if (olddialog) {
         wrapper.removeChild(olddialog);
     }
     let dialog = CreateElement('dialog', 'todoDialog')
-    let closeBtn = CreateElement('button','todoDialogClose');
+    let closeBtn = CreateElement('button', 'todoDialogClose');
     closeBtn.textContent = 'x';
+
+    //for update this is id not parent project id 
     let projectId = e.target.dataset.id;
     HightlightElement(e.target);
     let form = CreateElement('form', 'todo');
@@ -263,9 +278,9 @@ export function LoadTodoForm(e) {
     input3.setAttribute('type', 'datetime-local');
     let datetime = new Date();
     var now = new Date();
-now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     let addExtraMinute = new Date(Date.now() + (5 * 60 * 1000)).toISOString();
-    input3.setAttribute('value',now)
+    input3.setAttribute('value', now)
     input3.setAttribute('min', datetime.toISOString());
     AppendChild(div3, [label3, input3]);
 
@@ -299,43 +314,82 @@ now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     AppendChild(div7, [label7, input7]);
 
     let input8 = CreateElement('input');
+
+    //for update projectId is not projectID it is todo  Id 
     input8.value = projectId;
-    input8.setAttribute('name','projectId');
+    input8.setAttribute('name', 'projectId');
     input8.setAttribute('hidden', true);
-
-
-
-
+    
+    //not in below condition becuase of scope for add event listener
     let button = CreateElement('button', 'todoBtn');
-    button.setAttribute('type', 'button')
-    button.textContent = 'Submit';
-    
-    
-    AppendChild(form, [div1, div2, div3,  div4, div5, div6, div7, input8, button]);
-    
+    let buttonUpdate = CreateElement('button', 'todoBtn');
+
+
+
+
+    if (update) {
+        input1.value = todo.title || '';
+        input2.value = todo.color || 'black';
+        input3.value = todo.dueDate ? new Date(todo.dueDate).toISOString() : new Date();
+        input4.value = todo.description || '';
+        input5.value = todo.priority || '';
+        input6.value = todo.notes || '';
+        input7.value = todo.checklist || '';
+        input8.value = todo.projectId || '';
+        let input9 = CreateElement('input');
+        input9.value = todo.id;
+        input9.setAttribute('name', 'id');
+        input9.setAttribute('hidden', true);
+        buttonUpdate.setAttribute('type', 'button')
+        buttonUpdate.textContent = 'Update';
+        AppendChild(form, [div1, div2, div3, div4, div5, div6, div7, input8, input9, buttonUpdate]);
+    }
+    else {
+        button.setAttribute('type', 'button')
+        button.textContent = 'Submit';
+        AppendChild(form, [div1, div2, div3, div4, div5, div6, div7, input8, button]);
+    }
+
+
+
+
     AppendChild(dialog, [closeBtn, form]);
 
-    AppendChild(wrapper , dialog)
+    AppendChild(wrapper, dialog)
 
     dialog.showModal();
-    
-    AddClickEventListener(button, CreateTodo);
+
+    if (update) {
+        AddClickEventListener(buttonUpdate, UpdateExisitingTodo)
+    }
+    else {
+
+        AddClickEventListener(button, CreateTodo);
+    }
     AddClickEventListener(closeBtn, CloseTodoDialog)
 
 
 }
 
-function CloseTodoDialog(){
+function UpdateExisitingTodo(e) {
+    let form = GetElement('.todo');
+    let todo = new Todo(form.title.value, form.color.value, form.description.value, form.priority.value, form.notes.value, form.checklist.value,
+        form.projectId.value, form.dueDate.value, form.id.value);
+    UpdateTodo(todo.id, todo);
+    CloseTodoDialog();
+}
+
+function CloseTodoDialog() {
     let dialog = GetElement('.todoDialog');
     dialog.close();
 }
 
 
-function CreateTodo(){
+function CreateTodo() {
     let form = GetElement('.todo');
     let datetime = new Date();
     let todo = new Todo(form.title.value, form.color.value, form.description.value, form.priority.value, form.notes.value, form.checklist.value,
-    form.projectId.value, form.dueDate.value);
+        form.projectId.value, form.dueDate.value);
     AddTodo(form.projectId.value, todo)
     CloseTodoDialog();
 
@@ -355,11 +409,31 @@ export function LoadTodo(todos) {
         let span2 = CreateElement('span');
         span2.textContent = i.title;
 
-        let btn1 = CreateElement('button', 'deletetodo');
+        let span3 = CreateElement('span');
+        if (i.dueDate) {
+            let futureDueDate = new Date(i.dueDate);
+            // How many minutes are between 2 July 2014 12:07:59 and 2 July 2014 12:20:00?
+            let message = formatDistance(futureDueDate, new Date(), { addSuffix: true });
+            if (message.includes('ago')) {
+                span3.style.color = 'red';
+            }
+            else {
+                span3.style.color = 'green';
+                span3.textContent = message;
+            }
+
+        }
+
+        let btn = CreateElement('button', 'deletetodo');
+        btn.textContent = 'Update';
+        btn.dataset.id = i.id;
+
+        let btn1 = CreateElement('button', 'updatetodo');
         btn1.textContent = 'Delete';
         btn1.dataset.id = i.id;
-        AppendChild(div, [spanID, span1, span2, btn1])
+        AppendChild(div, [spanID, span1, span2, span3, btn, btn1])
         AppendChild(todoItems, div);
+        AddClickEventListener(btn, UpdateTodoById)
         AddClickEventListener(btn1, DeleteTodoById)
 
 
@@ -367,13 +441,20 @@ export function LoadTodo(todos) {
 
 }
 
-function DeleteTodoById(e){
+function UpdateTodoById(e) {
+    let id = e.target.dataset.id;
+    let todoCopy = [...GetTodos()];
+    let todo = todoCopy.find(t => t.id == id);
+    LoadTodoForm(e, todo);
+}
+
+function DeleteTodoById(e) {
     let id = e.target.dataset.id;
     DeleteTodo(id);
 
 }
 
-function HightlightElement(ele){
+function HightlightElement(ele) {
     let parentElement = ele.parentElement.parentElement;
     let children = parentElement.childNodes;
     Array.from(children).forEach(div => {
@@ -384,12 +465,12 @@ function HightlightElement(ele){
 }
 
 
-export function LoadHome(){
+export function LoadHome() {
     // let main = GetElement('main');
     // main.textContent = 'Home';
 }
 
-export function LoadAbout(){
+export function LoadAbout() {
     // let main = GetElement('main');
     // main.textContent = 'About';
 }
