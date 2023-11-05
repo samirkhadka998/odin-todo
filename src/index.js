@@ -122,6 +122,9 @@ export function AddTodo(projectid, todo) {
 }
 
 export function UpdateTodo(id, todo) {
+    if(!ValidateTodo(todo.projectId,todo, todo.id)){
+        return;
+    }
     let index = todos.findIndex(t => t.id == id)
     if (index != -1) {
         todos[index] = todo;
@@ -154,23 +157,27 @@ export function DeleteTodo(id) {
 }
 
 
-function ValidateTodo(id, todo) {
+function ValidateTodo(id, todo , todoId = undefined) {
     let isValid = true;
     if (!todo.title) {
         LogMessage('valid', 'info');
         isValid = false;
     }
     
-    else if (CheckTodoExist(id, todo.title)) {
+    else if (CheckTodoExist(id, todo.title, todoId)) {
         LogMessage('check', 'info')
         isValid = false;
     }
     return isValid;
 }
 
-function CheckTodoExist(id, title) {
-
-    return todos.some(todo => todo.title.toLowerCase() == title.toLowerCase() && todo.projectId == id)
+function CheckTodoExist(id, title, todoId) {
+    if(todoId){
+        return todos.some(todo => todo.title.toLowerCase() == title.toLowerCase() && todo.projectId == id && todo.id != todoId)
+    }
+    else{
+        return todos.some(todo => todo.title.toLowerCase() == title.toLowerCase() && todo.projectId == id)
+    }
 
 }
 
