@@ -50,22 +50,28 @@ export class Todo {
 }
 
 export function AddProject(name, color) {
-    if (CheckProjectExist(name)) {
-        LogMessage(`Project with ${name} already exist`)
+    if(!name){
+        LogMessage('valid','info')
         return;
     }
-    let datetime = new Date();
-    let project = new Project(name, color, datetime.toISOString());
-    projects.push(project);
-    LogMessage();
-    ReloadProjects();
-
+    if (CheckProjectExist(name)) {
+        LogMessage(`check`, 'info')
+    }
+    else{
+        let datetime = new Date();
+        let project = new Project(name, color, datetime.toISOString());
+        projects.push(project);
+        LogMessage();
+        ReloadProjects();
+    
+    }
+    
 }
 
 
 
 function CheckProjectExist(name) {
-    return projects.some(p => p.name == name);
+    return projects.some(p => p.name.toLowerCase() == name.toLowerCase());
 }
 
 export function DeleteProject(id) {
@@ -106,9 +112,9 @@ function ReloadProjects() {
 
 
 export function AddTodo(projectid, todo) {
-    // if(!ValidateTodo(projectid,todo)){
-    //     return;
-    // }
+    if(!ValidateTodo(projectid,todo)){
+        return;
+    }
     todos.push(todo);
     LogMessage();
     ReloadTodos(projectid);
@@ -151,23 +157,20 @@ export function DeleteTodo(id) {
 function ValidateTodo(id, todo) {
     let isValid = true;
     if (!todo.title) {
-        LogMessage('Title is needed.');
+        LogMessage('valid', 'info');
         isValid = false;
     }
-    if (!todo.priority) {
-        LogMessage('Priority is needed.')
-        isValid = false;
-    }
-    else if (CheckTodoExist(id, todo)) {
-        LogMessage('Title already in todo item')
+    
+    else if (CheckTodoExist(id, todo.title)) {
+        LogMessage('check', 'info')
         isValid = false;
     }
     return isValid;
 }
 
 function CheckTodoExist(id, title) {
-    let project = GetProjects(id);
-    return todos.some(todo => todo.title == title && todo.projectId == id)
+
+    return todos.some(todo => todo.title.toLowerCase() == title.toLowerCase() && todo.projectId == id)
 
 }
 

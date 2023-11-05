@@ -46,6 +46,14 @@ export default function LogMessage(type = "save", icon = "success") {
             message = "Data updated sucessfully"
             break;
 
+        case "check":
+            message = "Data already exits"
+            break;
+
+        case "valid":
+            message = "Please enter valid name"
+            break;
+
 
         default:
             break;

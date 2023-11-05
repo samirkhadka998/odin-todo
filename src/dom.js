@@ -85,7 +85,7 @@ export function LoadProjectDialog() {
 
     let div1 = CreateElement('div');
     let label1 = CreateElement('label');
-    label1.textContent = 'Name';
+    label1.textContent = 'Name *';
     let input1 = CreateElement('input');
     input1.setAttribute('name', 'name');
     AppendChild(div1, [label1, input1])
@@ -262,7 +262,7 @@ export function LoadTodoForm(e, todo) {
 
     let div1 = CreateElement('div');
     let label1 = CreateElement('label');
-    label1.textContent = 'Name';
+    label1.textContent = 'Name *';
     let input1 = CreateElement('input');
     input1.setAttribute('name', 'title');
     AppendChild(div1, [label1, input1])
@@ -300,8 +300,23 @@ export function LoadTodoForm(e, todo) {
     let div5 = CreateElement('div');
     let label5 = CreateElement('label');
     label5.textContent = 'Priority';
-    let input5 = CreateElement('input');
+    let input5 = CreateElement('select');
     input5.setAttribute('name', 'priority');
+    let option1 = CreateElement('option');
+    option1.value = "High";
+    option1.textContent = "High";
+
+    let option2 = CreateElement('option');
+    option2.value = "Medium";
+    option2.textContent = "Medium";
+
+    let option3 = CreateElement('option');
+    option3.value = "Low";
+    option3.textContent = "Low";
+
+    AppendChild(input5, [option1, option2, option3])
+
+
     AppendChild(div5, [label5, input5]);
 
     // let div6 = CreateElement('div');
