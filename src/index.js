@@ -33,7 +33,7 @@ class Project {
 
 
 export class Todo {
-    constructor(title, color, description, priority, notes, checklist, projectId, dueDate, id = undefined) {
+    constructor(title, priority, projectId, dueDate, id = undefined) {
         let datetime = new Date();
         if (id) {
             this.id = id;
@@ -42,12 +42,8 @@ export class Todo {
             this.id = GetTodoCounter();
         }
         this.title = title;
-        this.color = color;
         this.dueDate = datetime.toISOString();
-        this.description = description;
         this.priority = priority;
-        this.notes = notes;
-        this.checklist = checklist;
         this.projectId = projectId;
         this.dueDate = dueDate;
     }

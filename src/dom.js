@@ -176,9 +176,9 @@ export function LoadProject(projects) {
     content.textContent = '';
     // projects = GetProjects();
     projects.forEach(i => {
-        let div = CreateElement('div');
-        let span = CreateElement('span');
-        span.textContent = i.id;
+        let maindiv = CreateElement('div');
+        let div1 = CreateElement('div','projectName');
+        let div2 = CreateElement('div','projectFeature');
         let span1 = CreateElement('span', 'color');
         span1.style.background = i.color;
         span1.style.color = i.color;
@@ -207,8 +207,10 @@ export function LoadProject(projects) {
 
         }
 
-        AppendChild(div, [span1, span2, btn2, btn1, btn, span3])
-        AppendChild(content, div);
+        AppendChild(div1, [span1, span2])
+        AppendChild(div2, [btn2, btn1, btn, span3])
+        AppendChild(maindiv, [div1, div2])
+        AppendChild(content, maindiv);
         AddClickEventListener(btn1, DeleteProjectById);
         AddClickEventListener(btn, ViewProjectById)
         AddClickEventListener(btn2, LoadTodoForm)
@@ -234,7 +236,7 @@ function ViewProjectById(e) {
     let todosCopy = [...GetTodos()];
     todosCopy = todosCopy.filter(t => t.projectId == id);
     LoadTodo(todosCopy)
-    HightlightElement(e.target)
+    HightlightElement(e.target.parentElement)
 }
 
 
@@ -265,13 +267,13 @@ export function LoadTodoForm(e, todo) {
     input1.setAttribute('name', 'title');
     AppendChild(div1, [label1, input1])
 
-    let div2 = CreateElement('div');
-    let label2 = CreateElement('label');
-    label2.textContent = 'Color';
-    let input2 = CreateElement('input');
-    input2.setAttribute('name', 'color');
-    input2.setAttribute('type', 'color')
-    AppendChild(div2, [label2, input2]);
+    // let div2 = CreateElement('div');
+    // let label2 = CreateElement('label');
+    // label2.textContent = 'Color';
+    // let input2 = CreateElement('input');
+    // input2.setAttribute('name', 'color');
+    // input2.setAttribute('type', 'color')
+    // AppendChild(div2, [label2, input2]);
 
     let div3 = CreateElement('div');
     let label3 = CreateElement('label');
@@ -287,12 +289,12 @@ export function LoadTodoForm(e, todo) {
     input3.setAttribute('min', datetime.toISOString());
     AppendChild(div3, [label3, input3]);
 
-    let div4 = CreateElement('div');
-    let label4 = CreateElement('label');
-    label4.textContent = 'Description';
-    let input4 = CreateElement('input');
-    input4.setAttribute('name', 'description');
-    AppendChild(div4, [label4, input4]);
+    // let div4 = CreateElement('div');
+    // let label4 = CreateElement('label');
+    // label4.textContent = 'Description';
+    // let input4 = CreateElement('input');
+    // input4.setAttribute('name', 'description');
+    // AppendChild(div4, [label4, input4]);
 
 
     let div5 = CreateElement('div');
@@ -302,19 +304,19 @@ export function LoadTodoForm(e, todo) {
     input5.setAttribute('name', 'priority');
     AppendChild(div5, [label5, input5]);
 
-    let div6 = CreateElement('div');
-    let label6 = CreateElement('label');
-    label6.textContent = 'Notes';
-    let input6 = CreateElement('input');
-    input6.setAttribute('name', 'notes');
-    AppendChild(div6, [label6, input6]);
+    // let div6 = CreateElement('div');
+    // let label6 = CreateElement('label');
+    // label6.textContent = 'Notes';
+    // let input6 = CreateElement('input');
+    // input6.setAttribute('name', 'notes');
+    // AppendChild(div6, [label6, input6]);
 
-    let div7 = CreateElement('div');
-    let label7 = CreateElement('label');
-    label7.textContent = 'Check List';
-    let input7 = CreateElement('input');
-    input7.setAttribute('name', 'checklist');
-    AppendChild(div7, [label7, input7]);
+    // let div7 = CreateElement('div');
+    // let label7 = CreateElement('label');
+    // label7.textContent = 'Check List';
+    // let input7 = CreateElement('input');
+    // input7.setAttribute('name', 'checklist');
+    // AppendChild(div7, [label7, input7]);
 
     let input8 = CreateElement('input');
 
@@ -332,12 +334,8 @@ export function LoadTodoForm(e, todo) {
 
     if (update) {
         input1.value = todo.title || '';
-        input2.value = todo.color || 'black';
         input3.value = todo.dueDate ? new Date(todo.dueDate).toISOString() : new Date();
-        input4.value = todo.description || '';
         input5.value = todo.priority || '';
-        input6.value = todo.notes || '';
-        input7.value = todo.checklist || '';
         input8.value = todo.projectId || '';
         let input9 = CreateElement('input');
         input9.value = todo.id;
@@ -345,12 +343,12 @@ export function LoadTodoForm(e, todo) {
         input9.setAttribute('hidden', true);
         buttonUpdate.setAttribute('type', 'button')
         buttonUpdate.textContent = 'Update';
-        AppendChild(form, [div1, div2, div3, div4, div5, div6, div7, input8, input9, buttonUpdate]);
+        AppendChild(form, [div1, div3, div5, input8, input9, buttonUpdate]);
     }
     else {
         button.setAttribute('type', 'button')
         button.textContent = 'Submit';
-        AppendChild(form, [div1, div2, div3, div4, div5, div6, div7, input8, button]);
+        AppendChild(form, [div1,  div3,  div5, input8, button]);
     }
 
 
@@ -376,7 +374,7 @@ export function LoadTodoForm(e, todo) {
 
 function UpdateExisitingTodo(e) {
     let form = GetElement('.todo');
-    let todo = new Todo(form.title.value, form.color.value, form.description.value, form.priority.value, form.notes.value, form.checklist.value,
+    let todo = new Todo(form.title.value, form.priority.value, 
         form.projectId.value, form.dueDate.value, form.id.value);
     UpdateTodo(todo.id, todo);
     CloseTodoDialog();
@@ -391,7 +389,7 @@ function CloseTodoDialog() {
 function CreateTodo() {
     let form = GetElement('.todo');
     let datetime = new Date();
-    let todo = new Todo(form.title.value, form.color.value, form.description.value, form.priority.value, form.notes.value, form.checklist.value,
+    let todo = new Todo(form.title.value,  form.priority.value, 
         form.projectId.value, form.dueDate.value);
     AddTodo(form.projectId.value, todo)
     CloseTodoDialog();
