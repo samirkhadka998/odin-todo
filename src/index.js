@@ -1,19 +1,19 @@
 // import "./style.css"
-import LogMessage , {AutoClose} from "./log";
-import LoadWrapper, {NavClick,LoadProjectForm, ProjectFormClick, LoadProject, LoadTodo} from "./dom";
+import LogMessage from "./log";
+import LoadWrapper, { NavClick, LoadProjectForm, ProjectFormClick, LoadProject, LoadTodo } from "./dom";
 import { GetProjects, SetProjects, GetTodos, SetTodos, GetProjectCounter, GetTodoCounter } from "./localStorage";
+import Swal from 'sweetalert2'
 
 
 LoadWrapper();
-AutoClose();
 
 
 let projects = GetProjects();
 let todos = GetTodos();
 
-if(projects.length > 0){
+if (projects.length > 0) {
     LoadProject(projects);
-    let firstProject = projects.sort((a,b) => a.id > b.id ? 1 : -1)[0];
+    let firstProject = projects.sort((a, b) => a.id > b.id ? 1 : -1)[0];
     let todosCopy = [...todos];
     todosCopy = todosCopy.filter(t => t.projectId == firstProject.id);
     LoadTodo(todosCopy)
@@ -26,7 +26,7 @@ if(projects.length > 0){
 
 
 class Project {
-    constructor(name, color){
+    constructor(name, color) {
         let datetime = new Date();
         this.id = GetProjectCounter()
         this.name = name;
@@ -36,13 +36,13 @@ class Project {
 }
 
 
-export class Todo{
-    constructor(title, color, description, priority, notes, checklist, projectId, dueDate, id = undefined){
+export class Todo {
+    constructor(title, color, description, priority, notes, checklist, projectId, dueDate, id = undefined) {
         let datetime = new Date();
-        if(id){
+        if (id) {
             this.id = id;
         }
-        else{
+        else {
             this.id = GetTodoCounter();
         }
         this.title = title;
@@ -57,16 +57,17 @@ export class Todo{
     }
 }
 
-export function AddProject(name, color){
-    if(CheckProjectExist(name)){
+export function AddProject(name, color) {
+    if (CheckProjectExist(name)) {
         LogMessage(`Project with ${name} already exist`)
         return;
     }
     let datetime = new Date();
     let project = new Project(name, color, datetime.toISOString());
     projects.push(project);
+    LogMessage();
     ReloadProjects();
-    
+
 }
 
 
@@ -79,17 +80,31 @@ export function DeleteProject(id) {
     let projectCopy = [...projects]
     let todoCopy = [...todos];
     let project = projectCopy.find(p => p.id == id);
-    todoCopy =  todoCopy.filter(t => t.projectId == id);
+    todoCopy = todoCopy.filter(t => t.projectId == id);
 
-    let confirmation = confirm(`Are you sure you want to delete ${project.name} ?. It has ${todoCopy.length} children`);
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            todos = todos.filter(t => t.projectId != id);
+            projects = projects.filter(p => p.id != id);
+            ReloadTodos();
+            ReloadProjects();
+            Swal.fire(
+                'Deleted!',
+                'Project has been deleted.',
+                'success'
+            )
+        }
+    })
 
-    if(confirmation){
-        todos = todos.filter(t => t.projectId != id);
-        projects = projects.filter(p => p.id != id);
-        ReloadTodos();
-        ReloadProjects();
-    }
-    
+
 }
 
 function ReloadProjects() {
@@ -98,23 +113,25 @@ function ReloadProjects() {
 }
 
 
-export function AddTodo(projectid, todo){
+export function AddTodo(projectid, todo) {
     // if(!ValidateTodo(projectid,todo)){
     //     return;
     // }
     todos.push(todo);
+    LogMessage();
     ReloadTodos(projectid);
-   
+
 }
 
 export function UpdateTodo(id, todo) {
     let index = todos.findIndex(t => t.id == id)
-    if(index != -1){
+    if (index != -1) {
         todos[index] = todo;
+        LogMessage("update");
         ReloadTodos(todo.projectId);
     }
 
-    
+
 }
 
 function ReloadTodos(projectId) {
@@ -125,49 +142,50 @@ function ReloadTodos(projectId) {
 }
 
 export function DeleteTodo(id) {
-    
+
     //to find projectId
     let todoCopy = [...todos];
     //we use find becuase it returns object , unlike filter which return arrary regarless of result count
     let todo = todoCopy.find(t => t.id == id);
-   
+
 
     //changing orginal array
     todos = todos.filter(t => t.id != id);
+    LogMessage('delete')
     ReloadTodos(todo.projectId);
 }
 
 
-function ValidateTodo(id,todo){
+function ValidateTodo(id, todo) {
     let isValid = true;
-    if(!todo.title){
+    if (!todo.title) {
         LogMessage('Title is needed.');
         isValid = false;
     }
-    if(!todo.priority){
+    if (!todo.priority) {
         LogMessage('Priority is needed.')
         isValid = false;
     }
-    else if(CheckTodoExist(id, todo)){
+    else if (CheckTodoExist(id, todo)) {
         LogMessage('Title already in todo item')
-        isValid =  false;
+        isValid = false;
     }
     return isValid;
 }
 
-function CheckTodoExist(id, title){
+function CheckTodoExist(id, title) {
     let project = GetProjects(id);
     return todos.some(todo => todo.title == title && todo.projectId == id)
 
 }
 
-export function GetDateDetails(date){
-    return  {
-        dd : String(date.getDate()).padStart(2, '0'),
-        mm : String(date.getMonth() + 1).padStart(2, '0'),
-        yyyy:  date.getFullYear(),
-        hh:String(date.getHours() + 1).padStart(2, '0'),
-        mi:String(date.getMinutes() + 1).padStart(2, '0'),
+export function GetDateDetails(date) {
+    return {
+        dd: String(date.getDate()).padStart(2, '0'),
+        mm: String(date.getMonth() + 1).padStart(2, '0'),
+        yyyy: date.getFullYear(),
+        hh: String(date.getHours() + 1).padStart(2, '0'),
+        mi: String(date.getMinutes() + 1).padStart(2, '0'),
     }
 }
 

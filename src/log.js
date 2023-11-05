@@ -1,33 +1,61 @@
 import Swal from 'sweetalert2'
 
 
-export default function LogMessage(message, type) {
+export function ConfirmMessage() {
+    let result = false;
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            //   Swal.fire(
+            //     'Deleted!',
+            //     'Your file has been deleted.',
+            //     'success'
+            //   )
+            result = true;
+        }
+        else {
 
-    console.log(message)
+            result = false;
+        }
+    })
+
+    return result;
 }
 
-export  function AutoClose() {
+export default function LogMessage(type = "save", icon = "success") {
 
-    let timerInterval
+    let message = '';
+
+    switch (type) {
+        case "save":
+            message = "Data saved sucessfully"
+            break;
+
+        case "delete":
+            message = "Data deleted sucessfully"
+            break;
+
+        case "update":
+            message = "Data updated sucessfully"
+            break;
+
+
+        default:
+            break;
+    }
+
     Swal.fire({
-        title: 'Auto close alert!',
-        html: 'I will close in <b></b> milliseconds.',
-        timer: 2000,
-        timerProgressBar: true,
-        didOpen: () => {
-            Swal.showLoading()
-            // const b = Swal.getHtmlContainer().querySelector('b')
-            timerInterval = setInterval(() => {
-                //   b.textContent = Swal.getTimerLeft()
-            }, 100)
-        },
-        willClose: () => {
-            clearInterval(timerInterval)
-        }
-    }).then((result) => {
-        /* Read more about handling dismissals below */
-        //   if (result.dismiss === Swal.DismissReason.timer) {
-        //     console.log('I was closed by the timer')
-        //   }
+        icon: icon,
+        title: message,
+        showConfirmButton: false,
+        timer: 1300
     })
+
 }
