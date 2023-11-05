@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+:root{
+    --color1 : #f3f6fc;
+}
+
 body{
     background-color: rgb(16, 130, 230);
     font-family: 'Roboto Slab', serif;

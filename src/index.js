@@ -21,10 +21,6 @@ if (projects.length > 0) {
 
 
 
-
-
-
-
 class Project {
     constructor(name, color) {
         let datetime = new Date();
@@ -81,10 +77,10 @@ export function DeleteProject(id) {
     let todoCopy = [...todos];
     let project = projectCopy.find(p => p.id == id);
     todoCopy = todoCopy.filter(t => t.projectId == id);
+    let message = `Are you sure you want to delete ${project.name} ? It has ${todoCopy.length} todos`;
 
     Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
+        title: message,
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',

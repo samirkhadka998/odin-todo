@@ -33,7 +33,7 @@ function LoadNav() {
     let li2 = CreateElement('li');
     li2.textContent = 'About';
     let li3 = CreateElement('li', 'projectAdd');
-    li3.textContent = 'Add Project';
+    li3.textContent = '+ Add Project';
     AppendChild(ul, [li1, li2, li3]);
     AppendChild(nav, ul);
     AddClickEventListener([li1, li2, li3], NavAction);
@@ -185,16 +185,19 @@ export function LoadProject(projects) {
         let span2 = CreateElement('span');
         span2.textContent = i.name;
 
-        let btn = CreateElement('button', 'view');
-        btn.textContent = 'View';
+        let btn = CreateElement('i', 'view');
+        btn.classList.add("fa","fa-eye")
+        btn.title = 'View';
         btn.dataset.id = i.id;
 
-        let btn1 = CreateElement('button', 'delete');
-        btn1.textContent = 'Delete';
+        let btn1 = CreateElement('i', 'delete');
+        btn1.classList.add("fa","fa-close")
+        btn1.title = 'Delete';
         btn1.dataset.id = i.id;
 
-        let btn2 = CreateElement('button', 'createTodo');
-        btn2.textContent = 'Add Todo';
+        let btn2 = CreateElement('i', 'createTodo');
+        btn2.classList.add("fa","fa-plus")
+        btn2.title = 'Add Todo';
         btn2.dataset.id = i.id;
 
         let span3 = CreateElement('span', 'duedate');
@@ -204,7 +207,7 @@ export function LoadProject(projects) {
 
         }
 
-        AppendChild(div, [span1, span2, btn, btn1, btn2, span3])
+        AppendChild(div, [span1, span2, btn2, btn1, btn, span3])
         AppendChild(content, div);
         AddClickEventListener(btn1, DeleteProjectById);
         AddClickEventListener(btn, ViewProjectById)
@@ -401,8 +404,6 @@ export function LoadTodo(todos) {
     // todos = GetTodos();
     todos.forEach(i => {
         let div = CreateElement('div');
-        let spanID = CreateElement('span');
-        spanID.textContent = i.projectId;
         let span1 = CreateElement('span', 'color');
         span1.style.background = i.color;
         span1.style.color = i.color;
@@ -424,14 +425,16 @@ export function LoadTodo(todos) {
 
         }
 
-        let btn = CreateElement('button', 'deletetodo');
-        btn.textContent = 'Update';
+        let btn = CreateElement('i', 'deletetodo');
+        btn.classList.add("fa", "fa-edit")
+        btn.title = 'Update';
         btn.dataset.id = i.id;
 
-        let btn1 = CreateElement('button', 'updatetodo');
-        btn1.textContent = 'Delete';
+        let btn1 = CreateElement('i', 'updatetodo');
+        btn1.classList.add("fa", "fa-close")
+        btn1.title = 'Delete';
         btn1.dataset.id = i.id;
-        AppendChild(div, [spanID, span1, span2, span3, btn, btn1])
+        AppendChild(div, [ span1, span2, span3, btn, btn1])
         AppendChild(todoItems, div);
         AddClickEventListener(btn, UpdateTodoById)
         AddClickEventListener(btn1, DeleteTodoById)
