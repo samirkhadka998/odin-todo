@@ -273,12 +273,9 @@ export function LoadTodoForm(e, todo) {
     let input3 = CreateElement('input');
     input3.setAttribute('name', 'dueDate');
     input3.setAttribute('type', 'datetime-local');
-    let datetime = new Date();
-    var now = new Date();
-    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    let addExtraMinute = new Date(Date.now() + (5 * 60 * 1000)).toISOString();
-    input3.setAttribute('value', now)
-    input3.setAttribute('min', datetime.toISOString());
+    let date = new Date();
+    date = date.toISOString().substring(0,16);
+    input3.setAttribute('value',date)
     AppendChild(div3, [label3, input3]);
 
 
@@ -321,7 +318,7 @@ export function LoadTodoForm(e, todo) {
 
     if (update) {
         input1.value = todo.title || '';
-        input3.value = todo.dueDate ? new Date(todo.dueDate).toISOString() : new Date();
+        input3.value = todo.dueDate ? todo.dueDate : new Date();
         input5.value = todo.priority || '';
         input8.value = todo.projectId || '';
         let input9 = CreateElement('input');
