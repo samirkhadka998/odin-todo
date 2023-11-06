@@ -267,14 +267,6 @@ export function LoadTodoForm(e, todo) {
     input1.setAttribute('name', 'title');
     AppendChild(div1, [label1, input1])
 
-    // let div2 = CreateElement('div');
-    // let label2 = CreateElement('label');
-    // label2.textContent = 'Color';
-    // let input2 = CreateElement('input');
-    // input2.setAttribute('name', 'color');
-    // input2.setAttribute('type', 'color')
-    // AppendChild(div2, [label2, input2]);
-
     let div3 = CreateElement('div');
     let label3 = CreateElement('label');
     label3.textContent = 'Due Date';
@@ -289,12 +281,6 @@ export function LoadTodoForm(e, todo) {
     input3.setAttribute('min', datetime.toISOString());
     AppendChild(div3, [label3, input3]);
 
-    // let div4 = CreateElement('div');
-    // let label4 = CreateElement('label');
-    // label4.textContent = 'Description';
-    // let input4 = CreateElement('input');
-    // input4.setAttribute('name', 'description');
-    // AppendChild(div4, [label4, input4]);
 
 
     let div5 = CreateElement('div');
@@ -303,35 +289,21 @@ export function LoadTodoForm(e, todo) {
     let input5 = CreateElement('select');
     input5.setAttribute('name', 'priority');
     let option1 = CreateElement('option');
-    option1.value = "High";
+    option1.value = "1";
     option1.textContent = "High";
 
     let option2 = CreateElement('option');
-    option2.value = "Medium";
+    option2.value = "2";
     option2.textContent = "Medium";
 
     let option3 = CreateElement('option');
-    option3.value = "Low";
+    option3.value = "3";
     option3.textContent = "Low";
 
     AppendChild(input5, [option1, option2, option3])
 
 
     AppendChild(div5, [label5, input5]);
-
-    // let div6 = CreateElement('div');
-    // let label6 = CreateElement('label');
-    // label6.textContent = 'Notes';
-    // let input6 = CreateElement('input');
-    // input6.setAttribute('name', 'notes');
-    // AppendChild(div6, [label6, input6]);
-
-    // let div7 = CreateElement('div');
-    // let label7 = CreateElement('label');
-    // label7.textContent = 'Check List';
-    // let input7 = CreateElement('input');
-    // input7.setAttribute('name', 'checklist');
-    // AppendChild(div7, [label7, input7]);
 
     let input8 = CreateElement('input');
 
@@ -412,6 +384,8 @@ function CreateTodo() {
 }
 
 export function LoadTodo(todos) {
+    if(todos.length == 0) return;
+    todos = todos.sort((a,b)=> a.priority > b.priority? 1 : -1);
     let todoItems = GetElement('.todoItems');
     todoItems.textContent = '';
     // todos = GetTodos();
@@ -427,29 +401,34 @@ export function LoadTodo(todos) {
             // How many minutes are between 2 July 2014 12:07:59 and 2 July 2014 12:20:00?
             let message = formatDistance(futureDueDate, new Date(), { addSuffix: true });
             if (message.includes('ago')) {
-                span3.style.color = 'red';
+                span3.style.color = 'var(--color3)';
             }
             else {
-                span3.style.color = 'green';
-                span3.textContent = message;
+                span3.style.color = 'var(--color5)';
             }
             
+            span3.textContent = message;
         }
 
         let span4 = CreateElement('span', 'priority');
-        span4.textContent = i.priority[0];
         span4.title = "Priority";
         switch (i.priority) {
-            case "High":
+            case "1":
                 span4.style.color = 'var(--color3)'
+                span4.textContent = 'H';
+
                 break;
-            case "Medium":
+            case "2":
                 span4.style.color = 'var(--color2)'
+                span4.textContent = 'M';
+
                 break;
 
 
             default:
                 span4.style.color = 'var(--color4)'
+                span4.textContent = 'L';
+
                 break;
         }
 
