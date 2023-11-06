@@ -42,7 +42,7 @@ function LoadNav() {
 
 function LoadFooter() {
     let footer = CreateElement('footer');
-    footer.textContent = 'This is footer copyright';
+    footer.textContent = '© 2023 The Samir Todo Project. All rights reserved.';
     return footer;
 
 }
@@ -416,13 +416,11 @@ export function LoadTodo(todos) {
     todoItems.textContent = '';
     // todos = GetTodos();
     todos.forEach(i => {
-        let div = CreateElement('div');
-        let span1 = CreateElement('span', 'color');
-        span1.style.background = i.color;
-        span1.style.color = i.color;
+        let mainDiv = CreateElement('div');
+        let div1 = CreateElement('div');
+        let div2 = CreateElement('div');
         let span2 = CreateElement('span');
         span2.textContent = i.title;
-
         let span3 = CreateElement('span');
         if (i.dueDate) {
             let futureDueDate = new Date(i.dueDate);
@@ -435,7 +433,24 @@ export function LoadTodo(todos) {
                 span3.style.color = 'green';
                 span3.textContent = message;
             }
+            
+        }
 
+        let span4 = CreateElement('span', 'priority');
+        span4.textContent = i.priority[0];
+        span4.title = "Priority";
+        switch (i.priority) {
+            case "High":
+                span4.style.color = 'var(--color3)'
+                break;
+            case "Medium":
+                span4.style.color = 'var(--color2)'
+                break;
+
+
+            default:
+                span4.style.color = 'var(--color4)'
+                break;
         }
 
         let btn = CreateElement('i', 'deletetodo');
@@ -447,8 +462,10 @@ export function LoadTodo(todos) {
         btn1.classList.add("fa", "fa-close")
         btn1.title = 'Delete';
         btn1.dataset.id = i.id;
-        AppendChild(div, [ span1, span2, span3, btn, btn1])
-        AppendChild(todoItems, div);
+        AppendChild(div1, [span2, span3]);
+        AppendChild(div2,  [span4,btn, btn1])
+        AppendChild(mainDiv, [div1, div2])
+        AppendChild(todoItems, mainDiv);
         AddClickEventListener(btn, UpdateTodoById)
         AddClickEventListener(btn1, DeleteTodoById)
 
