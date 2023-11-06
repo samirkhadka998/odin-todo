@@ -3,6 +3,7 @@ import LogMessage from "./log";
 import LoadWrapper, { NavClick, LoadProjectForm, ProjectFormClick, LoadProject, LoadTodo } from "./dom";
 import { GetProjects, SetProjects, GetTodos, SetTodos, GetProjectCounter, GetTodoCounter } from "./localStorage";
 import Swal from 'sweetalert2'
+import  "./style.css";
 
 
 LoadWrapper();
