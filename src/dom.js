@@ -30,10 +30,20 @@ function LoadNav() {
     let ul = CreateElement('ul');
     let li1 = CreateElement('li');
     li1.textContent = 'Home';
+    li1.style.cursor = 'pointer'
+    li1.setAttribute('title', 'Disabled')
+
+
     let li2 = CreateElement('li');
     li2.textContent = 'About';
+    li2.style.cursor = 'pointer'
+    li2.setAttribute('title', 'Disabled')
+
+
     let li3 = CreateElement('li', 'projectAdd');
     li3.textContent = '+ Add Project';
+    li3.style.cursor = 'pointer'
+
     AppendChild(ul, [li1, li2, li3]);
     AppendChild(nav, ul);
     AddClickEventListener([li1, li2, li3], NavAction);
@@ -63,6 +73,7 @@ function LoadMain() {
 function NavAction(e) {
     if (e.target.className == 'projectAdd') {
         LoadProjectDialog();
+
     }
     else if (e.target.textContent == 'Home') {
         LoadHome();
@@ -70,6 +81,8 @@ function NavAction(e) {
     else {
         LoadAbout();
     }
+    console.log(e.target);
+
 }
 
 export function LoadProjectDialog() {

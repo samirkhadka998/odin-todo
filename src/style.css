@@ -439,3 +439,7 @@ nav,footer {
     display: flex;
     gap: 10px;
 }
+
+i {
+    cursor: pointer;
+}
